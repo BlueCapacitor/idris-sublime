@@ -26,7 +26,9 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
 
         package_region = v.find(r"\|\|\|\s+@PACKAGES:\s+\S[^\n]*$", 0)
         package_text = v.substr(package_region)
-        packages = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text).groups(0)[0]
+        matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text)
+        packages = matches.groups(0)[0] if matches is not None else ""
+        print(f"Found Idris packages: {packages}")
 
         def idris_cmd(cmd, row, column, n, additionalInput):
             global cursorBeforeCommand
@@ -45,7 +47,7 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
             else:
                 args = []
 
-            return ["idris2", "-p", packages, "--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
+            return ["idris2"] + (["-p", packages] if matches is not None else []) + "--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
 
         def run_cmd(cmd, additionalInput=None):
             env = os.environ
