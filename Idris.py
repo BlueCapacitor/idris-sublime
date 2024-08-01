@@ -24,6 +24,10 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
         (row, column) = v.rowcol(cursor)
         name = v.substr(v.word(cursor))
 
+        package_region = v.find(r"\|\|\|\s+@PACKAGES:\s+\S[^\n]*$", 0)
+        package_text = v.substr(package_region)
+        packages = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text).groups(0)[0]
+
         def idris_cmd(cmd, row, column, n, additionalInput):
             global cursorBeforeCommand
             cursorBeforeCommand = cursor
@@ -41,7 +45,7 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
             else:
                 args = []
 
-            return ["idris2", "--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
+            return ["idris2", "-p", packages, "--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
 
         def run_cmd(cmd, additionalInput=None):
             env = os.environ
