@@ -28,7 +28,7 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
         package_text = v.substr(package_region)
         matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text)
         packages = matches.groups(0)[0] if matches is not None else ""
-        print(f"Found Idris packages: " + packages)
+        print("Found Idris packages: " + packages)
 
         def idris_cmd(cmd, row, column, n, additionalInput):
             global cursorBeforeCommand
