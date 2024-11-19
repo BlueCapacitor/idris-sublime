@@ -53,7 +53,7 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
             else:
                 args = []
 
-            return [compiler_command] + (["-p", packages] if matches is not None else []) + ["--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
+            return [compiler_command] + (["-p", packages] if package_matches is not None else []) + ["--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
 
         def run_cmd(cmd, additionalInput=None):
             env = os.environ
