@@ -24,7 +24,7 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
         (row, column) = v.rowcol(cursor)
         name = v.substr(v.word(cursor))
 
-        compiler_region = v.find(r"\|\|\|\s+@PACKAGES:\s+\S[^\n]*$", 0)
+        compiler_region = v.find(r"\|\|\|\s+@COMPILER:\s+\S[^\n]*$", 0)
         compiler_text = v.substr(compiler_region)
         compiler_matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", compiler_text)
         compiler_command = compiler_matches.groups(0)[0] if compiler_matches is not None else "idris2"
