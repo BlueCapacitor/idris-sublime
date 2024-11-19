@@ -25,8 +25,8 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
         name = v.substr(v.word(cursor))
 
         compiler_region = v.find(r"\|\|\|\s+@PACKAGES:\s+\S[^\n]*$", 0)
-        compiler_text = v.substr(package_region)
-        compiler_matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text)
+        compiler_text = v.substr(compiler_region)
+        compiler_matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", compiler_text)
         compiler_command = compiler_matches.groups(0)[0] if compiler_matches is not None else "idris2"
         print("Found Idris compiler command: " + compiler_command)
         
