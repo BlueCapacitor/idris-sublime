@@ -24,10 +24,16 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
         (row, column) = v.rowcol(cursor)
         name = v.substr(v.word(cursor))
 
+        compiler_region = v.find(r"\|\|\|\s+@PACKAGES:\s+\S[^\n]*$", 0)
+        compiler_text = v.substr(package_region)
+        compiler_matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text)
+        compiler_command = compiler_matches.groups(0)[0] if compiler_matches is not None else "idris2"
+        print("Found Idris compiler command: " + compiler_command)
+        
         package_region = v.find(r"\|\|\|\s+@PACKAGES:\s+\S[^\n]*$", 0)
         package_text = v.substr(package_region)
-        matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text)
-        packages = matches.groups(0)[0] if matches is not None else ""
+        package_matches = re.match(r"\|\|\|\s+@PACKAGES:\s+(\S[^\n]*)$", package_text)
+        packages = package_matches.groups(0)[0] if package_matches is not None else ""
         print("Found Idris packages: " + packages)
 
         def idris_cmd(cmd, row, column, n, additionalInput):
@@ -47,7 +53,7 @@ class RunIdrisCommandCommand(sublime_plugin.TextCommand):
             else:
                 args = []
 
-            return ["idris2"] + (["-p", packages] if matches is not None else []) + ["--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
+            return [compiler_command] + (["-p", packages] if matches is not None else []) + ["--find-ipkg", v.file_name(), "--client", " ".join([cmd] + args)]
 
         def run_cmd(cmd, additionalInput=None):
             env = os.environ
